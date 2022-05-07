@@ -46,4 +46,9 @@ __pycache__
 env/
 
 .vscode
+
+
+# my specific files
+cspell.json
 notes.txt
+

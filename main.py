@@ -1,33 +1,23 @@
-import PySimpleGUI as sg
+import pygame
 
-# basic config
-sg.theme('DarkGrey5')
+WIDTH = 800
+HEIGHT = 600
 
-# all elements
-layout = [  [sg.Text('Some text on Row 1')],
-            [sg.Text('Enter something on Row 2'), sg.InputText()],
-            [sg.Button('Ok'), sg.Button('Cancel')] ]
-
-for i in range(0,10):
-    cells_row = []
-    for j in range (0,10):
-        cell_name = 'Cell' + str(i) + str(j)
-        cells_row.append(sg.Button(cell_name))
-        print(cell_name)
-
-    layout.append(cells_row)
+WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 
 
+def main():
+    run = True
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            
 
-window = sg.Window('', layout)
+    pygame.quit()
 
 
-# event loop
-while True:
-    event, values = window.read()
-    if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
-        break
-    print('You entered ', values[0])
+if __name__ == "__main__":
+    main()
 
-window.close()
-
+    

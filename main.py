@@ -21,13 +21,26 @@ TILE_WIDTH, TILE_HEIGHT = 50, 50
 A_IMAGE = pygame.image.load(os.path.join("assets", "a.png"))
 A_IMAGE = pygame.transform.scale(A_IMAGE, (TILE_WIDTH, TILE_WIDTH))
 
-
+# load objects
 player = Player(A_IMAGE, (10, 10), (50, 50))
+
+
+def read_input(events):
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                player.move_one_step(Direction.LEFT)
+            if event.key == pygame.K_RIGHT:
+                player.move_one_step(Direction.RIGHT)
+            if event.key == pygame.K_DOWN:
+                player.move_one_step(Direction.DOWN)
+            if event.key == pygame.K_UP:
+                player.move_one_step(Direction.UP)
 
 
 def draw_window():
     WIN.fill(WHITE)
-    player.move_one_step(Direction.RIGHT)
+    #player.move_one_step(Direction.RIGHT)
     WIN.blit(player.image, player.box.topleft)
 
     pygame.display.update()
@@ -38,9 +51,12 @@ def main():
     run = True
     while run:
         clock.tick(FPS)
-        for event in pygame.event.get():
+        events = pygame.event.get()
+        read_input(events)
+        for event in events:
             if event.type == pygame.QUIT:
                 run = False
+            
 
         draw_window()
 

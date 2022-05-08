@@ -1,5 +1,6 @@
 import pygame
 import os
+from pygame import Vector2
 
 from Player import Player
 from Direction import Direction
@@ -22,7 +23,9 @@ A_IMAGE = pygame.image.load(os.path.join("assets", "a.png"))
 A_IMAGE = pygame.transform.scale(A_IMAGE, (TILE_WIDTH, TILE_WIDTH))
 
 # load objects
-player = Player(A_IMAGE, (10, 10), (50, 50))
+first_pos = Vector2(0, 0)
+sizes = Vector2(50, 50)
+player = Player(A_IMAGE, first_pos, sizes)
 
 
 def read_input(events):
@@ -40,8 +43,9 @@ def read_input(events):
 
 def draw_window():
     WIN.fill(WHITE)
-    #player.move_one_step(Direction.RIGHT)
-    WIN.blit(player.image, player.box.topleft)
+
+    for i in player.get_player_part_queue():
+        WIN.blit(i.image, i.box.topleft)
 
     pygame.display.update()
 

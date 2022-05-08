@@ -4,7 +4,7 @@ from pygame import Vector2
 
 from Player import Player
 from Direction import Direction
-
+from BoxInfo import BoxInfo
 
 # prerequisites
 WIDTH, HEIGHT = 1600, 900
@@ -23,7 +23,9 @@ BOARD_WIDTH, BOARD_HEIGHT = 20, 15
 A_IMAGE = pygame.image.load(os.path.join("assets", "a.png"))
 A_IMAGE = pygame.transform.scale(A_IMAGE, (TILE_WIDTH, TILE_WIDTH))
 
+
 # load objects
+
 first_pos = Vector2(0, 0)
 sizes = Vector2(50, 50)
 player = Player(A_IMAGE, first_pos, sizes)
@@ -50,7 +52,7 @@ def draw_window():
     WIN.fill(WHITE)
 
     for i in player.get_player_part_queue():
-        WIN.blit(i.image, i.box.topleft)
+        WIN.blit(i.image, i.box_info.box.topleft)
 
     pygame.display.update()
 

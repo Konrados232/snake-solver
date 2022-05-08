@@ -11,6 +11,12 @@ class PlayerPart:
         self.real_pos = self.scale_grid_to_real_pos(grid_pos, sizes)
         self.box = pygame.Rect(self.real_pos, sizes)
 
+
+    def copy_pos_from(self, player_part):
+        self.sizes = player_part.sizes
+        self.grid_pos = player_part.grid_pos
+        self.real_pos = player_part.real_pos
+
     def move_one_step(self, direction):
         self.update_grid_pos(direction)
         self.update_real_pos(direction)

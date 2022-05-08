@@ -16,6 +16,7 @@ pygame.display.set_caption("Maze Solver")
 WHITE = (255, 255, 255)
 FPS = 60
 TILE_WIDTH, TILE_HEIGHT = 50, 50
+BOARD_WIDTH, BOARD_HEIGHT = 20, 15
 
 
 # loading images
@@ -32,13 +33,17 @@ def read_input(events):
     for event in events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                player.move_one_step(Direction.LEFT)
+                if is_next_move_possible(player.get_current_head_pos(), Direction.LEFT):
+                    player.move_one_step(Direction.LEFT)
             if event.key == pygame.K_RIGHT:
-                player.move_one_step(Direction.RIGHT)
+                if is_next_move_possible(player.get_current_head_pos(), Direction.RIGHT):
+                    player.move_one_step(Direction.RIGHT)
             if event.key == pygame.K_DOWN:
-                player.move_one_step(Direction.DOWN)
+                if is_next_move_possible(player.get_current_head_pos(), Direction.DOWN):
+                    player.move_one_step(Direction.DOWN)
             if event.key == pygame.K_UP:
-                player.move_one_step(Direction.UP)
+                if is_next_move_possible(player.get_current_head_pos(), Direction.UP):
+                    player.move_one_step(Direction.UP)
 
 
 def draw_window():
@@ -70,6 +75,15 @@ def main():
 
 
     pygame.quit()
+
+
+def is_next_move_possible(player_pos, direction):
+    next_pos_x = player_pos.x + direction.value[0]
+    next_pos_y = player_pos.y + direction.value[1]
+
+    return next_pos_x >= 0 and next_pos_x < BOARD_WIDTH and next_pos_y >= 0 and next_pos_y < BOARD_HEIGHT
+
+
 
 if __name__ == "__main__":
     main()

@@ -1,7 +1,6 @@
 import pygame
 from pygame import Vector2
 from collections import deque
-import copy
 
 from Direction import Direction
 from PlayerPart import PlayerPart
@@ -23,3 +22,6 @@ class Player:
 
     def get_player_part_queue(self):
         return self.parts_queue
+
+    def get_current_head_pos(self):
+        return self.parts_queue[-1].grid_pos

@@ -19,6 +19,9 @@ class PlayerPart:
         self.color_randomly_rect()
         self.box_info.update_box_position_by_grid(new_grid_pos)
 
+    def get_grid_pos(self):
+        return self.box_info.grid_pos
+
     def color_randomly_rect(self):
         self.image.fill((random.randint(50,250),random.randint(50,250),random.randint(50,250)))
 

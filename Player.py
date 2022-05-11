@@ -29,4 +29,4 @@ class Player:
         return self.parts_queue
 
     def get_current_head_pos(self):
-        return self.parts_queue[-1].box_info.grid_pos
+        return self.parts_queue[-1].get_grid_pos()

@@ -35,16 +35,16 @@ def read_input(events):
     for event in events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                if is_next_move_possible(player.get_current_head_pos(), Direction.LEFT):
+                if is_next_move_possible(player.get_current_head_pos(), player.get_player_part_queue(), Direction.LEFT):
                     player.move_one_step(Direction.LEFT)
             if event.key == pygame.K_RIGHT:
-                if is_next_move_possible(player.get_current_head_pos(), Direction.RIGHT):
+                if is_next_move_possible(player.get_current_head_pos(), player.get_player_part_queue(), Direction.RIGHT):
                     player.move_one_step(Direction.RIGHT)
             if event.key == pygame.K_DOWN:
-                if is_next_move_possible(player.get_current_head_pos(), Direction.DOWN):
+                if is_next_move_possible(player.get_current_head_pos(), player.get_player_part_queue(), Direction.DOWN):
                     player.move_one_step(Direction.DOWN)
             if event.key == pygame.K_UP:
-                if is_next_move_possible(player.get_current_head_pos(), Direction.UP):
+                if is_next_move_possible(player.get_current_head_pos(), player.get_player_part_queue(), Direction.UP):
                     player.move_one_step(Direction.UP)
 
 
@@ -79,11 +79,26 @@ def main():
     pygame.quit()
 
 
-def is_next_move_possible(player_pos, direction):
+
+def is_next_move_possible(player_pos, player_parts_queue, direction):
     next_pos_x = player_pos.x + direction.value[0]
     next_pos_y = player_pos.y + direction.value[1]
 
+    return not does_player_hit_itself(next_pos_x, next_pos_y, player_parts_queue) and is_within_board(next_pos_x, next_pos_y)
+
+
+def is_within_board(next_pos_x, next_pos_y):
     return next_pos_x >= 0 and next_pos_x < BOARD_WIDTH and next_pos_y >= 0 and next_pos_y < BOARD_HEIGHT
+
+
+def does_player_hit_itself(next_pos_x, next_pos_y, player_parts_queue):
+    for part in player_parts_queue:
+        part_grid_pos = part.get_grid_pos()
+        if next_pos_x == part_grid_pos.x and next_pos_y == part_grid_pos.y:
+            return True``
+
+    return False
+
 
 
 

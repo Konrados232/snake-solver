@@ -1,6 +1,7 @@
 import pygame
 import os
 from pygame import Vector2
+from Fruit import Fruit
 
 from Player import Player
 from Direction import Direction
@@ -17,11 +18,15 @@ WHITE = (255, 255, 255)
 FPS = 60
 TILE_WIDTH, TILE_HEIGHT = 50, 50
 BOARD_WIDTH, BOARD_HEIGHT = 20, 15
+BOARD_SIZES = (BOARD_WIDTH, BOARD_HEIGHT)
+
 
 
 # loading images
 A_IMAGE = pygame.image.load(os.path.join("assets", "a.png"))
 A_IMAGE = pygame.transform.scale(A_IMAGE, (TILE_WIDTH, TILE_WIDTH))
+FRUIT_IMAGE = pygame.image.load(os.path.join("assets", "fruit.png"))
+FRUIT_IMAGE = pygame.transform.scale(FRUIT_IMAGE, (TILE_WIDTH, TILE_WIDTH))
 
 
 # load objects
@@ -29,7 +34,8 @@ A_IMAGE = pygame.transform.scale(A_IMAGE, (TILE_WIDTH, TILE_WIDTH))
 first_pos = Vector2(0, 0)
 sizes = Vector2(50, 50)
 player = Player(A_IMAGE, first_pos, sizes)
-
+first_fruit_pos = Vector2((int)(BOARD_HEIGHT/2), (int)(BOARD_WIDTH/2))
+fruit = Fruit(FRUIT_IMAGE, first_fruit_pos, sizes)
 
 def read_input(events):
     for event in events:
@@ -37,15 +43,23 @@ def read_input(events):
             if event.key == pygame.K_LEFT:
                 if is_next_move_possible(player.get_current_head_pos(), player.get_player_part_queue(), Direction.LEFT):
                     player.move_one_step(Direction.LEFT)
+                    if does_player_hit_fruit(player.get_current_head_pos(), fruit.get_fruit_pos()):
+                        fruit.set_random_pos(player.get_player_part_queue(), BOARD_SIZES)
             if event.key == pygame.K_RIGHT:
                 if is_next_move_possible(player.get_current_head_pos(), player.get_player_part_queue(), Direction.RIGHT):
                     player.move_one_step(Direction.RIGHT)
+                    if does_player_hit_fruit(player.get_current_head_pos(), fruit.get_fruit_pos()):
+                        fruit.set_random_pos(player.get_player_part_queue(), BOARD_SIZES)
             if event.key == pygame.K_DOWN:
                 if is_next_move_possible(player.get_current_head_pos(), player.get_player_part_queue(), Direction.DOWN):
                     player.move_one_step(Direction.DOWN)
+                    if does_player_hit_fruit(player.get_current_head_pos(), fruit.get_fruit_pos()):
+                        fruit.set_random_pos(player.get_player_part_queue(), BOARD_SIZES)
             if event.key == pygame.K_UP:
                 if is_next_move_possible(player.get_current_head_pos(), player.get_player_part_queue(), Direction.UP):
                     player.move_one_step(Direction.UP)
+                    if does_player_hit_fruit(player.get_current_head_pos(), fruit.get_fruit_pos()):
+                        fruit.set_random_pos(player.get_player_part_queue(), BOARD_SIZES)
 
 
 def draw_window():
@@ -53,6 +67,8 @@ def draw_window():
 
     for i in player.get_player_part_queue():
         WIN.blit(i.image, i.box_info.box.topleft)
+
+    WIN.blit(fruit.image, fruit.box_info.box.topleft)
 
     pygame.display.update()
 
@@ -95,9 +111,12 @@ def does_player_hit_itself(next_pos_x, next_pos_y, player_parts_queue):
     for part in player_parts_queue:
         part_grid_pos = part.get_grid_pos()
         if next_pos_x == part_grid_pos.x and next_pos_y == part_grid_pos.y:
-            return True``
+            return True
 
     return False
+
+def does_player_hit_fruit(player_pos, fruit_pos):
+    return player_pos.x == fruit_pos.x and player_pos.y == fruit_pos.y
 
 
 

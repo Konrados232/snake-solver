@@ -10,7 +10,7 @@ from BoxInfo import BoxInfo
 # prerequisites
 WIDTH, HEIGHT = 1600, 900
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Maze Solver")
+pygame.display.set_caption("Snake Solver")
 
 
 # useful consts
@@ -45,22 +45,25 @@ def read_input(events):
                     player.move_one_step(Direction.LEFT)
                     if does_player_hit_fruit(player.get_current_head_pos(), fruit.get_fruit_pos()):
                         fruit.set_random_pos(player.get_player_part_queue(), BOARD_SIZES)
+                        player.increase_in_size_by_one()
             if event.key == pygame.K_RIGHT:
                 if is_next_move_possible(player.get_current_head_pos(), player.get_player_part_queue(), Direction.RIGHT):
                     player.move_one_step(Direction.RIGHT)
                     if does_player_hit_fruit(player.get_current_head_pos(), fruit.get_fruit_pos()):
                         fruit.set_random_pos(player.get_player_part_queue(), BOARD_SIZES)
+                        player.increase_in_size_by_one()
             if event.key == pygame.K_DOWN:
                 if is_next_move_possible(player.get_current_head_pos(), player.get_player_part_queue(), Direction.DOWN):
                     player.move_one_step(Direction.DOWN)
                     if does_player_hit_fruit(player.get_current_head_pos(), fruit.get_fruit_pos()):
                         fruit.set_random_pos(player.get_player_part_queue(), BOARD_SIZES)
+                        player.increase_in_size_by_one()
             if event.key == pygame.K_UP:
                 if is_next_move_possible(player.get_current_head_pos(), player.get_player_part_queue(), Direction.UP):
                     player.move_one_step(Direction.UP)
                     if does_player_hit_fruit(player.get_current_head_pos(), fruit.get_fruit_pos()):
                         fruit.set_random_pos(player.get_player_part_queue(), BOARD_SIZES)
-
+                        player.increase_in_size_by_one()
 
 def draw_window():
     WIN.fill(WHITE)
@@ -117,7 +120,6 @@ def does_player_hit_itself(next_pos_x, next_pos_y, player_parts_queue):
 
 def does_player_hit_fruit(player_pos, fruit_pos):
     return player_pos.x == fruit_pos.x and player_pos.y == fruit_pos.y
-
 
 
 

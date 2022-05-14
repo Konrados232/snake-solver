@@ -5,6 +5,7 @@ from collections import deque
 from Direction import Direction
 from PlayerPart import PlayerPart
 from BoxInfo import BoxInfo
+from Direction import Direction
 
 class Player:
     def __init__(self, image, init_pos, size):
@@ -13,6 +14,7 @@ class Player:
         self.parts_queue = deque()
         self.image = image # to reconsider
         self.size = size # to reconsider
+        self.current_direction = Direction.RIGHT
         # for testing
         for i in range(0, 10):
             x = BoxInfo(init_pos + Vector2(0, i), size)
@@ -31,6 +33,8 @@ class Player:
         new_elem.move_one_step_in_grid(direction)
         self.parts_queue.append(new_elem)
 
+        self.update_curr_dir(direction)
+
     def update_tailing_pos(self):
         self.tailing_pos.update(self.parts_queue[0].get_grid_pos())
 
@@ -40,6 +44,12 @@ class Player:
 
         self.parts_queue.appendleft(new_elem)
 
+
+    def update_curr_dir(self, direct):
+        self.current_direction = direct
+
+    def get_current_direction(self):
+        return self.current_direction
 
     def get_player_part_queue(self):
         return self.parts_queue

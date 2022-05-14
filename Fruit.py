@@ -18,7 +18,7 @@ class Fruit:
     def generate_next_pos(self, restricted_pos, grid_sizes):
         next_pos = Vector2(random.randint(0, grid_sizes[0] - 1), random.randint(0, grid_sizes[1] - 1))
         if self.is_occupied(next_pos, restricted_pos):
-            self.generate_next_pos(restricted_pos, grid_sizes)
+            return self.generate_next_pos(restricted_pos, grid_sizes)
         else:
             return next_pos
 

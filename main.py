@@ -131,6 +131,9 @@ def draw_window():
 
     update_score(score=score)
 
+    pygame.draw.line(WIN, (50,50,50), (0, 0), (1000, 0), 1)
+    pygame.draw.line(WIN, (50,50,50), (0, 750), (1000, 750), 1)
+    pygame.draw.line(WIN, (50,50,50), (1000, 0), (1000, 750), 1)
 
     pygame.display.update()
 
@@ -156,7 +159,7 @@ def main():
 
         draw_window()
 
-        if is_stuck():
+        if not can_move():
             draw_again()
             
 
@@ -189,15 +192,17 @@ def does_player_hit_fruit(player_pos, fruit_pos):
     return player_pos.x == fruit_pos.x and player_pos.y == fruit_pos.y
 
 
-def is_stuck():
+def can_move():
+    result = False
+
     player_pos = player.get_current_head_pos()
     player_parts_queue = player.get_player_part_queue()
     directions = [Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.DOWN]
     for dir in directions:
-        if(is_next_move_possible(player_pos, player_parts_queue, dir)): #sprawdzać jeszcze brzegi
-            return False
+        if(is_next_move_possible(player_pos, player_parts_queue, dir)):
+            result = True
 
-    return True
+    return result
 
 
 if __name__ == "__main__":

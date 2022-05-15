@@ -1,4 +1,5 @@
 from enum import Enum
+from time import sleep
 import pygame
 import os
 from pygame import Vector2
@@ -46,7 +47,7 @@ fruit = Fruit(FRUIT_IMAGE, first_fruit_pos, sizes)
 
 # font
 pygame.font.init()
-my_font = pygame.font.SysFont('Comi Sans MS', 30)
+my_font = pygame.font.SysFont('Comic Sans MS', 30)
 text_sur = my_font.render(str(score), False, (0,0,0))
 
 
@@ -54,6 +55,7 @@ text_sur = my_font.render(str(score), False, (0,0,0))
 
 def read_input(events):
     for event in events:
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 if is_next_move_possible(player.get_current_head_pos(), player.get_player_part_queue(), Direction.LEFT):
@@ -87,6 +89,7 @@ def read_input(events):
                 standardized_input = convert_input_to_direction(InputDirection.TURN_CLOCKWISE, current_dir=player.get_current_direction())
                 do_move(standardized_input)
 
+
 def convert_input_to_direction(input_dir, current_dir):
     if input_dir == InputDirection.FORWARD:
         new_dir = current_dir
@@ -117,6 +120,7 @@ def update_score(score):
     text_sur = my_font.render(str(score[0]), False, (0,0,0))
     WIN.blit(text_sur, (1000, 200))
 
+
 def draw_window():
     WIN.fill(WHITE)
 
@@ -130,6 +134,13 @@ def draw_window():
 
     pygame.display.update()
 
+def draw_again():
+    global fruit
+    global player
+    fruit = Fruit(FRUIT_IMAGE, first_fruit_pos, sizes)
+    player = Player(A_IMAGE, first_pos, sizes)
+    score[0] = 0
+    pygame.display.update()
 
 def main():
     clock = pygame.time.Clock()
@@ -145,10 +156,13 @@ def main():
 
         draw_window()
 
+        if is_stuck():
+            draw_again()
+            
+
         keys_pressed = pygame.key.get_pressed()
 
     pygame.quit()
-
 
 
 def is_next_move_possible(player_pos, player_parts_queue, direction):
@@ -170,9 +184,20 @@ def does_player_hit_itself(next_pos_x, next_pos_y, player_parts_queue):
 
     return False
 
+
 def does_player_hit_fruit(player_pos, fruit_pos):
     return player_pos.x == fruit_pos.x and player_pos.y == fruit_pos.y
 
+
+def is_stuck():
+    player_pos = player.get_current_head_pos()
+    player_parts_queue = player.get_player_part_queue()
+    directions = [Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.DOWN]
+    for dir in directions:
+        if(is_next_move_possible(player_pos, player_parts_queue, dir)): #sprawdzać jeszcze brzegi
+            return False
+
+    return True
 
 
 if __name__ == "__main__":

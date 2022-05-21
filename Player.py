@@ -11,11 +11,11 @@ class Player:
     def __init__(self, image, init_pos, size):
         self.image = image
         self.max_length = 100
-        self.parts_queue = deque()
         self.image = image # to reconsider
         self.size = size # to reconsider
+        self.parts_queue = deque()
+        self.init_pos = init_pos
         self.current_direction = Direction.RIGHT
-        # for testing
         for i in range(0, 10):
             x = BoxInfo(init_pos + Vector2(0, i), size)
             a = PlayerPart(image, x)
@@ -23,6 +23,15 @@ class Player:
 
         self.tailing_pos = init_pos + Vector2(0,0)
 
+    def reset(self):
+        self.parts_queue = deque()
+        self.current_direction = Direction.RIGHT
+        for i in range(0, 10):
+            x = BoxInfo(self.init_pos + Vector2(0, i), self.size)
+            a = PlayerPart(self.image, x)
+            self.parts_queue.append(a)
+
+        self.tailing_pos = self.init_pos + Vector2(0,0)
 
   
     def move_one_step(self, direction):

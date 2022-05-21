@@ -6,8 +6,16 @@ from BoxInfo import BoxInfo
 
 class Fruit:
     def __init__(self, image, init_pos, size):
+        self.init_pos = init_pos
+        self.size = size
         self.image = image
         self.box_info = BoxInfo(init_pos, size)
+
+
+    def reset(self):
+        self.image = self.image
+        self.box_info = BoxInfo(self.init_pos, self.size)
+
 
     def set_random_pos(self, restricted_pos, grid_sizes):
         new_grid_pos = self.generate_next_pos(restricted_pos, grid_sizes)

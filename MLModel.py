@@ -1,21 +1,15 @@
-
-
-from mimetypes import init
-
+from sre_parse import _OpSubpatternType
+import torch
+import torch.nn as nn
 
 class MLModel:
-    def __init__(self, data):
-        self.data = data
-        self.results = []
+    def __init__(self, input_size, between_size, output_size):
+        self.qnet = nn.Linear(input_size, between_size)
+        self.qnet2 = nn.Linear(between_size, output_size)
 
-    def read_data(data):
-        self.data = data
 
-    def process():
-        print('WIP')
+    
 
-    def get_data():
-        return self.data
 
 
 

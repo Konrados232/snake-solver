@@ -29,6 +29,10 @@ class Game():
         self.SPEED = 20
         self.score = 0
 
+        # RL variables
+        self.reward = 0
+        self.stagnate_steps = 0
+
         # loading images
         self.A_IMAGE = pygame.image.load(os.path.join("assets", "a.png"))
         self.A_IMAGE = pygame.transform.scale(self.A_IMAGE, (TILE_WIDTH, TILE_WIDTH))
@@ -112,6 +116,7 @@ class Game():
         self.player.reset()
         self.fruit.reset()
         self.score = 0
+        self.stagnate_steps = 0
         
     def read_input(self, events):
         for event in events:

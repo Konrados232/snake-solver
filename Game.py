@@ -179,6 +179,11 @@ class Game():
         self.player.increase_in_size_by_one()
 
 
+    # TO-DO refactor
+    def is_next_point_possible(self, point_pos):
+        return not self.does_player_hit_itself(point_pos.x, point_pos.y, self.player.get_player_part_queue()) and self.is_within_board(point_pos.x, point_pos.y, self.BOARD_WIDTH, self.BOARD_HEIGHT)
+
+
     def is_next_move_possible(self, player_pos, player_parts_queue, direction):
         next_pos_x = player_pos.x + direction.value[0]
         next_pos_y = player_pos.y + direction.value[1]

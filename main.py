@@ -1,15 +1,6 @@
-from http.client import ImproperConnectionState
-from statistics import mean
-from tkinter import LEFT, RIGHT
-from turtle import right
-from typing import final
-
-from torch import device
 from Game import Game
 from Agent import Agent
 from PlotHelp import plot
-from Direction import Direction
-from InputDirection import InputDirection
 
 
 def train():

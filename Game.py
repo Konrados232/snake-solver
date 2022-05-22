@@ -13,7 +13,9 @@ class Game():
         self.WIDTH = width
         self.HEIGHT = height
         self.WIN = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
+        pygame.init()
         pygame.display.set_caption("Snake Solver")
+        self.clock = pygame.time.Clock()
 
         # useful consts
         self.WHITE = (255, 255, 255)
@@ -30,7 +32,6 @@ class Game():
         self.score = 0
 
         # RL variables
-        self.reward = 0
         self.stagnate_steps = 0
 
         # loading images
@@ -51,19 +52,45 @@ class Game():
         self.fruit = Fruit(self.FRUIT_IMAGE, self.first_fruit_pos, self.sizes)
 
 
-    def main(self):
-        # input
+    def play_step(self, action):
 
+        self.stagnate_steps += 1
+        print(action)
+        direction = self.convert_array_to_direction(action, self.player.get_current_direction())
+        print(direction)
+        print(type(direction))
+         # input
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+        
         # move to the next direction
+        self.do_move_2(direction) # we know we are able to move because of checks in model (hopefully)
 
-        # check game over
-        # place next food
+        # check if game is over
+        reward = 0
+        game_over = False
+        if not self.can_move() or self.stagnate_steps > 100 * len(self.player.get_player_part_queue()):
+            game_over = True
+            reward -= 10
+            return reward, game_over, self.score
+
+        # check food
+        if self.does_player_hit_fruit(self.player.get_current_head_pos(), self.fruit.get_fruit_pos()):
+            reward += 10
+            self.do_fruit()
 
         # update ui and clock
+        self.draw_window()
+        self.clock.tick(self.SPEED)
 
         # return game over and score
+        return reward, game_over, self.score
 
 
+    def main(self):
         clock = pygame.time.Clock()
         run = True
         while run:
@@ -164,6 +191,16 @@ class Game():
 
         return new_dir
 
+    def convert_array_to_direction(self, array_dir, current_dir):
+        if array_dir == InputDirection.FORWARD.value:
+            return current_dir
+        if array_dir == InputDirection.TURN_CLOCKWISE.value:
+            return Direction.get_clockwise(current_dir)
+        if array_dir == InputDirection.TURN_COUNTERCLOCKWISE.value:
+            return Direction.get_counterclockwise(current_dir)
+
+    def do_move_2(self, direction):
+        self.player.move_one_step(direction)
 
     def do_move(self, direction):
         if self.is_next_move_possible(self.player.get_current_head_pos(), self.player.get_player_part_queue(), direction):
@@ -185,8 +222,8 @@ class Game():
 
 
     def is_next_move_possible(self, player_pos, player_parts_queue, direction):
-        next_pos_x = player_pos.x + direction.value[0]
-        next_pos_y = player_pos.y + direction.value[1]
+        next_pos_x = player_pos.x + direction.value.x
+        next_pos_y = player_pos.y + direction.value.y
 
         return not self.does_player_hit_itself(next_pos_x, next_pos_y, player_parts_queue) and self.is_within_board(next_pos_x, next_pos_y, self.BOARD_WIDTH, self.BOARD_HEIGHT)
 

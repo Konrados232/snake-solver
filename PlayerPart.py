@@ -15,7 +15,9 @@ class PlayerPart:
         self.box_info.sizes = box_info.sizes
 
     def move_one_step_in_grid(self, direction):
-        new_grid_pos = Vector2(self.box_info.grid_pos.x + direction.value[0], self.box_info.grid_pos.y + direction.value[1])
+        x = direction.value
+        print(type(x))
+        new_grid_pos = Vector2(self.box_info.grid_pos.x + direction.value.x, self.box_info.grid_pos.y + direction.value.y)
         self.color_randomly_rect()
         self.box_info.update_box_position_by_grid(new_grid_pos)
 

@@ -1,4 +1,3 @@
-from turtle import update
 import pygame
 from pygame import Vector2
 

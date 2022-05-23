@@ -55,10 +55,10 @@ class Game():
     def play_step(self, action):
 
         self.stagnate_steps += 1
-        print(action)
+        #print(action)
         direction = self.convert_array_to_direction(action, self.player.get_current_direction())
-        print(direction)
-        print(type(direction))
+        #print(direction)
+        #print(type(direction))
          # input
         events = pygame.event.get()
         for event in events:
@@ -72,7 +72,7 @@ class Game():
         # check if game is over
         reward = 0
         game_over = False
-        if not self.can_move() or self.stagnate_steps > 100 * len(self.player.get_player_part_queue()):
+        if not self.can_move() or self.stagnate_steps > 60 * len(self.player.get_player_part_queue()):
             game_over = True
             reward -= 10
             return reward, game_over, self.score
@@ -142,6 +142,7 @@ class Game():
     def reset(self):
         self.player.reset()
         self.fruit.reset()
+        self.fruit.set_random_pos(self.player.get_player_part_queue(), self.BOARD_SIZES)
         self.score = 0
         self.stagnate_steps = 0
         

@@ -1,7 +1,10 @@
 from Game import Game
 from Agent import Agent
 from PlotHelp import plot
-
+import pygame
+import pygame_menu
+import torch
+import os.path
 
 def train():
     plot_scores = []
@@ -43,8 +46,39 @@ def train():
             plot(plot_scores, plot_mean_scores)
 
 
+def model_without_training():
+    agent = Agent()
+
+    path = os.path.join("model","model.pth")
+    if os.path.exists(path):
+        agent.model.load_state_dict(torch.load(path))
+
+    game = Game(width=1600, height=900)
 
 
+    while True:
+        old_state = agent.get_current_state(game)
+
+        final_move = agent.get_action_without_training(old_state)
+
+        reward, game_over, score = game.play_step(final_move)
+        
+        if game_over:
+            # train long memory
+            game.reset()
+
+
+def play():
+    Game(width=1600, height=900).main()
 
 if __name__ == "__main__":
-    train()
+    pygame.init()
+    
+    surface = pygame.display.set_mode((600, 400))
+    menu = pygame_menu.Menu('Welcome', 600, 400,
+                       theme=pygame_menu.themes.THEME_BLUE)
+    
+    menu.add.button('Play', play)
+    menu.add.button('Train model', train)
+    menu.add.button('Use trained model', model_without_training)
+    menu.mainloop(surface)

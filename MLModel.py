@@ -25,5 +25,3 @@ class Linear_QNet(nn.Module):
 
         file_path = os.path.join(folder_path, file_name)
         torch.save(self.state_dict(), file_path)
-
-    

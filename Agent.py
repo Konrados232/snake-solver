@@ -13,7 +13,7 @@ from Trainer import Trainer
 
 class Agent:
     def __init__(self):
-        self.rl_info = RLModelInfo(number_of_games=0, epsilon=0, gamma=0.8)
+        self.rl_info = RLModelInfo(number_of_games=0, epsilon=0, gamma=0.9)
 
         # 
         self.max_mem = 50000
@@ -24,7 +24,6 @@ class Agent:
 
         self.model = Linear_QNet(11, 256, 3)
         self.trainer = Trainer(self.model, self.learning_rate, self.rl_info.gamma)
-
 
     def get_surrounding_points(self, current_pos, current_dir):
         counterclockwise = Direction.get_counterclockwise(current_dir).value
@@ -101,18 +100,23 @@ class Agent:
 
 
     def get_action(self, state):
-        self.rl_info.epsilon = 80 - self.rl_info.number_of_games
+        self.rl_info.epsilon = 180 - self.rl_info.number_of_games
 
         final_move = [0,0,0]
 
         if random.randint(0, 200) < self.rl_info.epsilon:
             move = random.randint(0, 2)
             final_move[move] = 1
+            return final_move
         else:
-            state0 = torch.tensor(state, dtype=torch.float)
-            prediction = self.model(state0)
-            move = torch.argmax(prediction).item()
-            final_move[move] = 1
+            return self.get_action_without_training(state)
+
+    def get_action_without_training(self, state):
+        final_move = [0,0,0]
+
+        state0 = torch.tensor(state, dtype=torch.float)
+        prediction = self.model(state0)
+        move = torch.argmax(prediction).item()
+        final_move[move] = 1
 
         return final_move
-

@@ -1,4 +1,3 @@
-import pygame
 import random
 from pygame import Vector2
 
@@ -18,15 +17,15 @@ class Fruit:
 
 
     def set_random_pos(self, restricted_pos, grid_sizes):
-        new_grid_pos = self.generate_next_pos(restricted_pos, grid_sizes)
+        new_grid_pos = self._generate_next_pos(restricted_pos, grid_sizes)
 
         self.box_info.update_box_position_by_grid(new_grid_pos)
     
 
-    def generate_next_pos(self, restricted_pos, grid_sizes):
+    def _generate_next_pos(self, restricted_pos, grid_sizes):
         next_pos = Vector2(random.randint(0, grid_sizes[0] - 1), random.randint(0, grid_sizes[1] - 1))
         if self.is_occupied(next_pos, restricted_pos):
-            return self.generate_next_pos(restricted_pos, grid_sizes)
+            return self._generate_next_pos(restricted_pos, grid_sizes)
         else:
             return next_pos
 
@@ -45,4 +44,3 @@ class Fruit:
 
     def scale_grid_to_real_pos(self, grid_pos, sizes):
         return Vector2(grid_pos.x * sizes.x, grid_pos.y * sizes.y)
-    

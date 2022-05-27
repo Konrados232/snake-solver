@@ -1,10 +1,12 @@
-from Game import Game
-from Agent import Agent
-from PlotHelp import plot
 import pygame
 import pygame_menu
 import torch
 import os.path
+
+from Game import Game
+from Agent import Agent
+from PlotHelp import plot
+
 
 def train():
     plot_scores = []
@@ -36,9 +38,8 @@ def train():
 
             if score > record:
                 record = score
-                agent.model.save("./model", "model.pth")
+                agent.model.save_to_file("./model", "model.pth")
 
-            # print(f"Game {agent.rl_info.number_of_games}, Score")
             plot_scores.append(score)
             total_score += score
             mean_score = total_score / agent.rl_info.number_of_games
@@ -49,7 +50,7 @@ def train():
 def model_without_training():
     agent = Agent()
 
-    path = os.path.join("model","model.pth")
+    path = os.path.join("trained_model","model.pth")
     if os.path.exists(path):
         agent.model.load_state_dict(torch.load(path))
 
@@ -68,8 +69,10 @@ def model_without_training():
             game.reset()
 
 
+
 def play():
     Game(width=1600, height=900).main()
+
 
 if __name__ == "__main__":
     pygame.init()

@@ -1,15 +1,15 @@
 import os
 import torch
 import torch.nn as nn
-import torch.optim as optim
 import torch.nn.functional as F
 
 
 class Linear_QNet(nn.Module):
-    def __init__(self, input_size, between_size, output_size):
+    def __init__(self, input_size, number_of_layers, layer_sizes, output_size):
         super().__init__()
-        self.qnet = nn.Linear(input_size, between_size)
-        self.qnet2 = nn.Linear(between_size, output_size)
+        if number_of_layers == 1:
+            self.qnet = nn.Linear(input_size, layer_sizes[0])
+            self.qnet2 = nn.Linear(layer_sizes[0], output_size)
 
 
     def forward(self, x):
@@ -19,7 +19,7 @@ class Linear_QNet(nn.Module):
 
 
     # model.pth
-    def save(self, folder_path, file_name):
+    def save_to_file(self, folder_path, file_name):
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
 

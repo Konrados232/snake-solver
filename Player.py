@@ -1,4 +1,3 @@
-import pygame
 from pygame import Vector2
 from collections import deque
 
@@ -6,6 +5,7 @@ from Direction import Direction
 from PlayerPart import PlayerPart
 from BoxInfo import BoxInfo
 from Direction import Direction
+
 
 class Player:
     def __init__(self, image, init_pos, size):

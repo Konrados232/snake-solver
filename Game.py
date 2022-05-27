@@ -7,6 +7,7 @@ from Player import Player
 from Direction import Direction
 from InputDirection import InputDirection
 
+
 class Game():
     def __init__(self, width, height):
         # prerequisites
@@ -55,19 +56,18 @@ class Game():
     def play_step(self, action):
 
         self.stagnate_steps += 1
-        #print(action)
         direction = self.convert_array_to_direction(action, self.player.get_current_direction())
-        #print(direction)
-        #print(type(direction))
-         # input
+        # input
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
         
+        
         # move to the next direction
         self.do_move_2(direction) # we know we are able to move because of checks in model (hopefully)
+
 
         # check if game is over
         reward = 0
@@ -116,23 +116,23 @@ class Game():
     def draw_window(self):
         self.WIN.fill(self.WHITE)
 
-        self.draw_game_elements()
-        self.draw_score()
-        self.draw_lines()
+        self._draw_game_elements()
+        self._draw_score()
+        self._draw_lines()
 
         pygame.display.update()
 
-    def draw_game_elements(self):
+    def _draw_game_elements(self):
         for i in self.player.get_player_part_queue():
             self.WIN.blit(i.image, i.box_info.box.topleft)
 
         self.WIN.blit(self.fruit.image, self.fruit.box_info.box.topleft)
     
-    def draw_score(self):
+    def _draw_score(self):
         text_sur = self.my_font.render(str(self.score), False, (0,0,0))
         self.WIN.blit(text_sur, (1000, 200))
 
-    def draw_lines(self):
+    def _draw_lines(self):
         pygame.draw.line(self.WIN, (50,50,50), (0, 0), (1000, 0), 1)
         pygame.draw.line(self.WIN, (50,50,50), (0, 750), (1000, 750), 1)
         pygame.draw.line(self.WIN, (50,50,50), (1000, 0), (1000, 750), 1)

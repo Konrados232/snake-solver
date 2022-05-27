@@ -2,9 +2,7 @@ import torch
 import numpy as np
 import random
 
-from pygame import Vector2
 from RLModelInfo import RLModelInfo
-from Game import Game
 from collections import deque
 from Direction import Direction
 from MLModel import Linear_QNet
@@ -13,19 +11,17 @@ from Trainer import Trainer
 
 class Agent:
     def __init__(self):
-        self.rl_info = RLModelInfo(number_of_games=0, epsilon=0, gamma=0.9)
+        self.rl_info = RLModelInfo(number_of_games=0, epsilon=0, gamma=0.9, learning_rate=0.001,
+                            input_vector_size=11, output_vector_size=3, number_of_layers=1, layer_sizes=[256], 
+                            maximum_memory=50000, batch_size=1000, number_of_games_for_training=180, random_scale=200)
 
-        # 
-        self.max_mem = 50000
-        self.batch_size = 1000
-        self.learning_rate = 0.001
+        self.memory_queue = deque(maxlen=self.rl_info.maximum_memory)
 
-        self.memory_queue = deque(maxlen=self.max_mem)
+        self.model = Linear_QNet(self.rl_info.input_vector_size, self.rl_info.number_of_layers, self.rl_info.layer_sizes, self.rl_info.output_vector_size)
+        self.trainer = Trainer(self.model, self.rl_info.learning_rate, self.rl_info.gamma)
 
-        self.model = Linear_QNet(11, 256, 3)
-        self.trainer = Trainer(self.model, self.learning_rate, self.rl_info.gamma)
 
-    def get_surrounding_points(self, current_pos, current_dir):
+    def _get_surrounding_points(self, current_pos, current_dir):
         counterclockwise = Direction.get_counterclockwise(current_dir).value
         left_point = current_pos + counterclockwise
         straight_point = current_pos + current_dir.value
@@ -34,7 +30,7 @@ class Agent:
         return [left_point, straight_point, right_point]
     
 
-    def get_surrounding_danger(self, game, points):
+    def _get_surrounding_danger(self, game, points):
         left, straight, right = points
         left_danger = game.is_next_point_possible(left)
         straight_danger = game.is_next_point_possible(straight)
@@ -46,8 +42,8 @@ class Agent:
         player = game.player
         fruit = game.fruit
 
-        points = self.get_surrounding_points(player.get_current_head_pos(), player.get_current_direction())
-        left_danger, straight_danger, right_danger = self.get_surrounding_danger(game, points)        
+        points = self._get_surrounding_points(player.get_current_head_pos(), player.get_current_direction())
+        left_danger, straight_danger, right_danger = self._get_surrounding_danger(game, points)        
         
         moving_left = player.current_direction == Direction.LEFT
         moving_right = player.current_direction == Direction.RIGHT
@@ -88,8 +84,8 @@ class Agent:
 
 
     def train_on_long_memory(self):
-        if len(self.memory_queue) > self.batch_size:
-            min_sample = random.sample(self.memory_queue, self.batch_size)
+        if len(self.memory_queue) > self.rl_info.batch_size:
+            min_sample = random.sample(self.memory_queue, self.rl_info.batch_size)
         else:
             min_sample = self.memory_queue
 
@@ -100,16 +96,17 @@ class Agent:
 
 
     def get_action(self, state):
-        self.rl_info.epsilon = 180 - self.rl_info.number_of_games
+        self.rl_info.epsilon = self.rl_info.number_of_games_for_training - self.rl_info.number_of_games
 
         final_move = [0,0,0]
 
-        if random.randint(0, 200) < self.rl_info.epsilon:
-            move = random.randint(0, 2)
+        if random.randint(0, self.rl_info.random_scale) < self.rl_info.epsilon:
+            move = random.randint(0, len(final_move) - 1)
             final_move[move] = 1
             return final_move
         else:
             return self.get_action_without_training(state)
+
 
     def get_action_without_training(self, state):
         final_move = [0,0,0]

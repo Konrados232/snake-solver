@@ -1,3 +1,4 @@
+from matplotlib.pyplot import text
 import pygame
 import os
 from pygame import Vector2
@@ -40,10 +41,11 @@ class Game():
         self.A_IMAGE = pygame.transform.scale(self.A_IMAGE, (TILE_WIDTH, TILE_WIDTH))
         self.FRUIT_IMAGE = pygame.image.load(os.path.join("assets", "fruit.png"))
         self.FRUIT_IMAGE = pygame.transform.scale(self.FRUIT_IMAGE, (TILE_WIDTH, TILE_WIDTH))
+        self.SNAKE_IMAGE = pygame.image.load(os.path.join("assets", "SolidnySnake.png"))
 
         # font
         pygame.font.init()
-        self.my_font = pygame.font.SysFont('Comic Sans MS', 30)
+        self.my_font = pygame.font.SysFont('Comic Sans MS', 50)
         self.text_sur = self.my_font.render(str(self.score), False, (0,0,0))
 
         # load objects
@@ -127,10 +129,12 @@ class Game():
             self.WIN.blit(i.image, i.box_info.box.topleft)
 
         self.WIN.blit(self.fruit.image, self.fruit.box_info.box.topleft)
+        self.WIN.blit(self.SNAKE_IMAGE, Vector2(1050, 300))
+
     
     def _draw_score(self):
-        text_sur = self.my_font.render(str(self.score), False, (0,0,0))
-        self.WIN.blit(text_sur, (1000, 200))
+        text_sur = self.my_font.render(f"SCORE {str(self.score)}", False, (0,0,0))
+        self.WIN.blit(text_sur, (1150, 50))
 
     def _draw_lines(self):
         pygame.draw.line(self.WIN, (50,50,50), (0, 0), (1000, 0), 1)

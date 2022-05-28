@@ -14,7 +14,7 @@ def train():
     total_score = 0
     record = 0
     agent = Agent()
-    game = Game(width=1600, height=900)
+    game = Game(width=1500, height=800)
 
 
     while True:
@@ -54,7 +54,7 @@ def model_without_training():
     if os.path.exists(path):
         agent.model.load_state_dict(torch.load(path))
 
-    game = Game(width=1600, height=900)
+    game = Game(width=1500, height=800)
 
 
     while True:
@@ -71,7 +71,7 @@ def model_without_training():
 
 
 def play():
-    Game(width=1600, height=900).main()
+    Game(width=1500, height=800).main()
 
 
 if __name__ == "__main__":
